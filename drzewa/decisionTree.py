@@ -3,8 +3,8 @@ from collections import Counter
 import random
 import string
 
-categorical_value_options = [0, 1]
-numerical_value_options = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9]
+categorical_value_options = [0] #Zmienione z [0, 1] bo jeśli pole ma 2 opcje do dla 0 będzie T albo F a dla 1 odwrotnie więc nie trzeba sprawdzać obu
+numerical_value_options = np.linspace(-0.1, 0,9, 50).tolist() #30 wartości od -0,1 do 0,9
 
 #Używane do określenia czy dane kolumna powinna być traktowana jako liczba czy kategoria
 #0 to kategoria 1 to liczba
@@ -78,6 +78,7 @@ class decisionTree:
     def createTree(self, data, ratings, uniformity=1, min_size=3):
         self.uniformity = uniformity
         self.min_size = min_size
+        self.half_tolerance = 0.1
         if len(ratings) > 2*min_size: #can the set be divided into two
             self.createNode("0", data, ratings)
         else:
@@ -115,8 +116,9 @@ class decisionTree:
 
                     if split_in_half: #splits set in half
                         proportion_of_false_set = len(result_rating_false) / len(ratings)
-                        if proportion_of_false_set > 0.4 and proportion_of_false_set < 0.6: #tolerances for half
-                            if result_rating_false >= self.min_size and result_rating_false >= self.min_size:
+                        #print(proportion_of_false_set)
+                        if proportion_of_false_set > 0.5 - self.half_tolerance and proportion_of_false_set < 0.5 + self.half_tolerance: #tolerances for half
+                            if len(result_rating_false) >= self.min_size and len(result_rating_true) >= self.min_size:
                                 node_correct_result = self.generateRandomId()
                                 node_false_result = self.generateRandomId()
                                 print("SPLIT")
@@ -157,7 +159,6 @@ class decisionTree:
                                     node_false_result = '!' + str(Counter(result_rating_true).most_common(1)[0][0]) #Jeśli rezulat warunku zaczyna się od ! to jest to zwracany wynik
 
                             node_string = node_id + ";" + condition_string + ";" + node_false_result + ";" + node_correct_result
-                            print(str(no_loops) + " Parent " + node_id)
                             self.addNode(node_string)
                             comparison_value = -1  #end loop
                             break;
@@ -169,12 +170,16 @@ class decisionTree:
                                 
                             
         if not comparison_value == -1: #was ended without creating a node
-            answer = str(Counter(ratings).most_common(1)[0][0])
-            node_string = node_id + ";0 = 0;!" + str(answer) + ";!" + str(answer)
-            print(str(no_loops) + " Failed " + node_id)
-            self.addNode(node_string)
-            print("WARNING!!! imperfect tree created for " + self.tree_destination + " with min_size: " + str(self.min_size) + " and uniformity: " + str(self.uniformity))
-            print(ratings)
+            print(str(self.half_tolerance) + " Failed " + node_id)
+            self.half_tolerance = self.half_tolerance + 0.1
+            if self.half_tolerance < 0.5:
+                self.createNode(node_id, data, ratings) #Lower half tolerance and start over
+            else:
+                print("WARNING!!! imperfect tree created for " + self.tree_destination + " with min_size: " + str(self.min_size) + " and uniformity: " + str(self.uniformity))
+                print("Set not separated: " + str(len(ratings)) + "->" + str(ratings))
+                answer = str(Counter(ratings).most_common(1)[0][0])
+                node_string = node_id + ";0 = 0;!" + str(answer) + ";!" + str(answer)
+                self.addNode(node_string)
 
     def getNode(self, node_id, filepath):
         o = open(filepath, "r")

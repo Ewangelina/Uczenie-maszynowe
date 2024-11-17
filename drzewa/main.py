@@ -15,14 +15,14 @@ movie_df = load_and_process_movies()
 
 #for file in all_train_files:
 if True:
-    file = "307.csv"
+    file = "196.csv"
     trainFilePath = ".\\..\\Dane\\train\\" + file
     treeDestination = ".\\trees\\" + file
     print(f"Loading training data for student {file}")
     X_train, y_train = load_train_data(movie_df, trainFilePath)
 
     dt = decisionTree(treeDestination)
-    dt.createTree(X_train, y_train, 0.9, 1)
+    dt.createTree(X_train, y_train, 0.9, 2) #te wartości zostały wpisane ręcznie, docelowo należy je znaleźć jak k
 
     taskFilePath = ".\\..\\Dane\\task\\" + file
     outputFilePath = ".\\output\\" + file
