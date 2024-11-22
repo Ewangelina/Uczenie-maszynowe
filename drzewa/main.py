@@ -22,7 +22,7 @@ if True:
     X_train, y_train = load_train_data(movie_df, trainFilePath)
 
     dt = decisionTree(treeDestination)
-    dt.createTree(X_train, y_train, 0.9, 2) #te wartości zostały wpisane ręcznie, docelowo należy je znaleźć jak k
+    dt.createTree(X_train, y_train, 0.6, 2) #te wartości zostały wpisane ręcznie, docelowo należy je znaleźć jak k
 
     taskFilePath = ".\\..\\Dane\\task\\" + file
     outputFilePath = ".\\output\\" + file
