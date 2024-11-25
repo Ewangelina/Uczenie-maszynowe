@@ -2,6 +2,7 @@ from data_processing import load_and_process_movies, load_train_data, load_task_
 from decisionTree import decisionTree
 from os import listdir
 from os.path import isfile, join
+from randomForest import randomForest
 
 def addNode(string, file):
     o = open(file, "a")
@@ -25,7 +26,7 @@ if True:
     dt.createTree(X_train, y_train, 0.6, 2) #te wartości zostały wpisane ręcznie, docelowo należy je znaleźć jak k
 
     taskFilePath = ".\\..\\Dane\\task\\" + file
-    outputFilePath = ".\\output\\" + file
+    outputFilePath = ".\\output\\tree\\" + file
     task_df, X_task = load_task_data(movie_df, taskFilePath)
     y_task = []
     for row in X_task:
@@ -34,5 +35,17 @@ if True:
     task_df["Predicted Rating"] = y_task
     task_df[["User ID", "Predicted Rating"]].to_csv(outputFilePath, index=False, sep=";", header=False)
 
+    outputFilePath = ".\\output\\forest\\" + file
+    rf = randomForest(X_train, y_train, treeDestination, 13, 0.6, 3)
+    
+    y_task = []
+    for row in X_task:
+        y_task.append(int(rf.predict(row)))
+
+    task_df["Predicted Rating"] = y_task
+    task_df[["User ID", "Predicted Rating"]].to_csv(outputFilePath, index=False, sep=";", header=False)
+
+    
+    
 
 print("TASK DONE")
