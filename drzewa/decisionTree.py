@@ -8,10 +8,10 @@ numerical_value_options = np.linspace(-0.1, 0,9, 50).tolist() #30 wartości od -
 
 #Używane do określenia czy dane kolumna powinna być traktowana jako liczba czy kategoria
 #0 to kategoria 1 to liczba
-data_categories = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+#data_categories = [1,1,1,1,1,1,1,0,...] nie chce mi się wypisywać 420 cech więc wszystkie liczbowe są na początku
 
 class decisionTree:
-    def __init__(self, tree_destination=".\\trees\\196.csv"):
+    def __init__(self, tree_destination="drzewa\\trees\\196.csv"):
         self.tree_destination = tree_destination
         w = open(self.tree_destination, "w")
         w.close()
@@ -78,7 +78,6 @@ class decisionTree:
     def createTree(self, data, ratings, uniformity=1, min_size=3):
         self.uniformity = uniformity
         self.min_size = min_size
-        self.half_tolerance = 0.1
         if len(ratings) > 2*min_size: #can the set be divided into two
             self.createNode("0", data, ratings)
         else:
@@ -94,6 +93,7 @@ class decisionTree:
         node_false_result = None
         node_correct_result = None
         no_loops = 0
+        half_tolerance = 0.1
 
         comparison_value = len(data[0])
         while len(considered_rows) < comparison_value: #póki każda z kolumn nie została rozważona
@@ -103,7 +103,7 @@ class decisionTree:
                 used_value_options = None
                 action_str = None
 
-                if data_categories[row] == 1: #wartość numeryczna
+                if row <= 6: #Pierwsze 6 indeksów to numeryczne, reszta to kategoryczne
                     used_value_options = numerical_value_options
                     action_str = "<"
                 else:
@@ -115,10 +115,11 @@ class decisionTree:
                     result_false, result_rating_false, result_true, result_rating_true = self.useCondition(condition_string, data, ratings)
 
                     if split_in_half: #splits set in half
+                        no_loops = no_loops + 1
                         proportion_of_false_set = len(result_rating_false) / len(ratings)
                         #print(proportion_of_false_set)
-                        if proportion_of_false_set > 0.5 - self.half_tolerance and proportion_of_false_set < 0.5 + self.half_tolerance: #tolerances for half
-                            if len(result_rating_false) >= self.min_size and len(result_rating_true) >= self.min_size:
+                        if proportion_of_false_set > 0.5 - half_tolerance and proportion_of_false_set < 0.5 + half_tolerance: #tolerances for half
+                            if len(result_rating_false) >= self.min_size * 2 and len(result_rating_true) >= self.min_size * 2:
                                 node_correct_result = self.generateRandomId()
                                 node_false_result = self.generateRandomId()
                                 print("SPLIT")
@@ -128,6 +129,17 @@ class decisionTree:
                                 self.createNode(node_correct_result, result_true, result_rating_true)
                                 self.createNode(node_false_result, result_false, result_rating_false)
                                 break;
+
+                        if len(considered_rows) == comparison_value: #has exhausted all columns
+                            half_tolerance = half_tolerance + 0.1
+                            if half_tolerance < 0.5:
+                                considered_rows = [] #Lower half tolerance and start over
+                            else:
+                                print("WARNING!!! imperfect tree created for " + self.tree_destination + " with min_size: " + str(self.min_size) + " and uniformity: " + str(self.uniformity))
+                                print("Set not separated: " + str(len(ratings)) + "->" + str(ratings))
+                                answer = str(Counter(ratings).most_common(1)[0][0])
+                                node_string = node_id + ";0 = 0;!" + str(answer) + ";!" + str(answer)
+                                self.addNode(node_string)
                                                      
                     else: # splits creating an uniform set 
                         no_loops = no_loops + 1
@@ -163,23 +175,12 @@ class decisionTree:
                             comparison_value = -1  #end loop
                             break;
 
-                        if len(considered_rows) == len(data[0]): #has exhausted all columns
+                        if len(considered_rows) == comparison_value: #has exhausted all columns
                             #switch to splitting in half
                             considered_rows = []
                             split_in_half = True
                                 
-                            
-        if not comparison_value == -1: #was ended without creating a node
-            print(str(self.half_tolerance) + " Failed " + node_id)
-            self.half_tolerance = self.half_tolerance + 0.1
-            if self.half_tolerance < 0.5:
-                self.createNode(node_id, data, ratings) #Lower half tolerance and start over
-            else:
-                print("WARNING!!! imperfect tree created for " + self.tree_destination + " with min_size: " + str(self.min_size) + " and uniformity: " + str(self.uniformity))
-                print("Set not separated: " + str(len(ratings)) + "->" + str(ratings))
-                answer = str(Counter(ratings).most_common(1)[0][0])
-                node_string = node_id + ";0 = 0;!" + str(answer) + ";!" + str(answer)
-                self.addNode(node_string)
+                        
 
     def getNode(self, node_id, filepath):
         o = open(filepath, "r")

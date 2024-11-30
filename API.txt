@@ -1,3 +1,8 @@
 39032a02d9ca8bbf77f5e010ef85edd8
 
 eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzOTAzMmEwMmQ5Y2E4YmJmNzdmNWUwMTBlZjg1ZWRkOCIsIm5iZiI6MTcyOTkyMTQ3MC43NjM3NzksInN1YiI6IjY3MWM4MGFjNmU0MjEwNzgwZjc5MTc1YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._lBDFKA7r_CnG5VUuMdyjPCIyzrXIYQls3zUyp9CgKo
+
+
+
+Nazwy kolumn
+movie id	budget	popularity	vote count	vote average	revenue	runtime	release date	oryg len	genres	production_companies	production_countries	spoken_languages
