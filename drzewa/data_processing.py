@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, MultiLabelBinarizer
 
-def load_and_process_movies(file_path=".\\..\\Dane\\more_moviedeets.csv"):
+def load_and_process_movies(file_path="Dane\\more_moviedeets.csv"):
     # Define column names based on data structure
     movie_columns = ["ID", "Budget", "Popularity", "Vote Count", "Vote Average", "Revenue", "Runtime", "release_date", "oryginal_lang",  "Genres", "Production companies", "Production Countries", "spoken_languages"]
 

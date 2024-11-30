@@ -11,7 +11,7 @@ numerical_value_options = np.linspace(-0.1, 0,9, 50).tolist() #30 wartości od -
 #data_categories = [1,1,1,1,1,1,1,0,...] nie chce mi się wypisywać 420 cech więc wszystkie liczbowe są na początku
 
 class decisionTree:
-    def __init__(self, tree_destination=".\\trees\\196.csv"):
+    def __init__(self, tree_destination="drzewa\\trees\\196.csv"):
         self.tree_destination = tree_destination
         w = open(self.tree_destination, "w")
         w.close()

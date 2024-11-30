@@ -5,7 +5,7 @@ import string
 import decisionTree
 
 class randomForest:
-    def __init__(self, X_train, y_train, tree_destination=".\\trees\\196.csv", no_trees = 10, uniformity=1, min_size=3):
+    def __init__(self, X_train, y_train, tree_destination="drzewa\\trees\\196.csv", no_trees = 10, uniformity=1, min_size=3):
         tree_prefix = tree_destination[:-4]
         trees_names = []
         for i in range(no_trees):
