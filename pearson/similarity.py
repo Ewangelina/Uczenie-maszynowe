@@ -1,5 +1,3 @@
-import math
-
 def calculate_similarity(row1, row2, no_movies_treshold):
     common_movies = [
         (float(row1[i]), float(row2[i]))
@@ -20,8 +18,7 @@ def calculate_similarity(row1, row2, no_movies_treshold):
     similarity = numerator / denominator if denominator != 0 else 0
     return similarity
 
-
-def predict(movie_id, similarity_list):
+def predict(movie_id, similarity_list, global_average=2.5):
     movie_id = int(movie_id)
     weighted_sum = 0
     total_similarity = 0
@@ -29,18 +26,16 @@ def predict(movie_id, similarity_list):
     for similarity, row in similarity_list:
         rating = row[movie_id]
         if rating != 'X':  # If the user has reviewed the movie
-            weighted_sum += similarity * float(rating)
-            total_similarity += similarity
+            weighted_sum += abs(similarity) * float(rating)
+            total_similarity += abs(similarity)
 
     if total_similarity != 0:
         predicted_grade = weighted_sum / total_similarity
-        # Clamp the predicted value and round to the nearest integer
         predicted_grade = max(0, min(5, predicted_grade))
         return round(predicted_grade)
     else:
-        return None
-
-
+        # Fallback to global average
+        return round(global_average)
 
 
 def create_similarity_list(student_id, reviews, no_movies_treshold):
@@ -53,6 +48,7 @@ def create_similarity_list(student_id, reviews, no_movies_treshold):
             break
 
     if not current_student:
+        print(f"Student {student_id} not found in reviews.")
         return similarity_list
 
     for row in reviews:
@@ -63,3 +59,4 @@ def create_similarity_list(student_id, reviews, no_movies_treshold):
 
     similarity_list.sort(reverse=True, key=lambda x: x[0])
     return similarity_list
+
