@@ -1,6 +1,5 @@
 import json
 import math
-
 from sklearn.metrics import mean_squared_error
 from data_processing import load_reviews, split_reviews
 from similarity import create_similarity_list, predict

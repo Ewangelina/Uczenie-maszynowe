@@ -14,12 +14,26 @@ def load_reviews(file_path="./Dane/student_reviews.csv"):
                 result.append(split_line)
     return result, idiots
 
+
 def is_user_stupid(row):
     usual_grade = row[1]
     for i in range(2, len(row)):
         if row[i] == usual_grade:
             return False
     return True
+
+
+def calculate_movie_average(movie_id, reviews):
+    total_rating = 0
+    count = 0
+    for row in reviews:
+        rating = row[movie_id]
+        if rating != 'X':
+            total_rating += float(rating)
+            count += 1
+    return total_rating / count if count > 0 else None
+
+
 
 def split_reviews(reviews, validation_ratio=0.2):
     training_set = []
