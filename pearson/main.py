@@ -7,7 +7,7 @@ reviews, _ = load_reviews()
 hyperparameters = load_hyperparameters("best_hyperparameters.json")
 best_threshold = hyperparameters["no_movies_treshold"] if hyperparameters else 1
 
-with open("task.csv", "r") as task_file, open("output.csv", "w", newline='') as output_file:
+with open("pearson\\task.csv", "r") as task_file, open("output.csv", "w", newline='') as output_file:
     reader = csv.reader(task_file, delimiter=';')
     writer = csv.writer(output_file, delimiter=';')
 

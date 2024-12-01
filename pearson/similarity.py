@@ -32,8 +32,14 @@ def predict(movie_id, similarity_list):
             weighted_sum += similarity * float(rating)
             total_similarity += similarity
 
-    # Return prediction if valid similarities exist
-    return weighted_sum / total_similarity if total_similarity != 0 else None
+    if total_similarity != 0:
+        predicted_grade = weighted_sum / total_similarity
+        # Clamp the predicted value and round to the nearest integer
+        predicted_grade = max(0, min(5, predicted_grade))
+        return round(predicted_grade)
+    else:
+        return None
+
 
 
 

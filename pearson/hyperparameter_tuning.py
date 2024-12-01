@@ -46,7 +46,7 @@ def load_hyperparameters(file_path):
 if __name__ == "__main__":
     reviews, _ = load_reviews()
     training_set, validation_set = split_reviews(reviews)
-    thresholds = range(1, 91, 10)
+    thresholds = range(5, 10)
 
     best_threshold, best_rmse = grid_search(training_set, validation_set, thresholds)
     print(f"Best Threshold: {best_threshold}, Best RMSE: {best_rmse}")
