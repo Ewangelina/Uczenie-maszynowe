@@ -1,45 +1,27 @@
+import csv
 from data_processing import load_reviews
-from similarity import predict, create_similarity_list
+from similarity import create_similarity_list, predict
+from hyperparameter_tuning import load_hyperparameters
 
-def write(string, file):
-    o = open(file, "a")
-    o.write(string)
-    o.close()
-    
-reviews, idiots = load_reviews()
-skip_list = []
+reviews, _ = load_reviews()
+hyperparameters = load_hyperparameters("best_hyperparameters.json")
+best_threshold = hyperparameters["no_movies_treshold"] if hyperparameters else 1
 
-for el in idiots:
-    skip_list.append(el[0])
+with open("task.csv", "r") as task_file, open("output.csv", "w", newline='') as output_file:
+    reader = csv.reader(task_file, delimiter=';')
+    writer = csv.writer(output_file, delimiter=';')
 
-task = open(".\\..\\Dane\\task.csv")
-current_student_id = -1
-similarity_list = None
-out_line = ""
+    current_student_id = None
+    similarity_list = None
 
-for task_line in task:
-    task_id, student_id, movie_id, grade = task_line.split(";")
-    if student_id in skip_list:
-        for el in idiots:
-            if idiots[0] == student_id:
-                grade = idiots[1]
-                out_line = task_id + ";" + student_id + ";" + movie_id + ";" + grade + "\n"
-    else:
-        if student_id == current_student_id:
-            grade = predict(movie_id, similarity_list)
-            out_line = task_id + ";" + student_id + ";" + movie_id + ";" + grade + "\n"
-        else:
-            current_student_id = student_id
-            similarity_list = create_similarity_list(student_id, reviews, 1)#hiperparametr tutaj
-            grade = predict(movie_id, similarity_list)
-            out_line = task_id + ";" + student_id + ";" + movie_id + ";" + grade + "\n"
+    for row in reader:
+        task_id, student_id, movie_id, grade = row
 
-    write(out_line, "output.csv")
-    #exit(0)
-        
-        
-    
-        
-        
-        
-    
+        if grade == "NULL":
+            if student_id != current_student_id:
+                current_student_id = student_id
+                similarity_list = create_similarity_list(student_id, reviews, best_threshold)
+
+            grade = predict(movie_id, similarity_list) or "NULL"
+
+        writer.writerow([task_id, student_id, movie_id, grade])

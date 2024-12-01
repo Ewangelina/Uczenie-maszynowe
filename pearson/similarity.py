@@ -1,42 +1,59 @@
-import random
+import math
 
 def calculate_similarity(row1, row2, no_movies_treshold):
-    #tu pearson
-    #jeśli ilość filmów zrecenzowanych przez obie osoby < no_movies_treshold to zwróć None
-    return random.random()
+    common_movies = [
+        (float(row1[i]), float(row2[i]))
+        for i in range(1, len(row1))
+        if row1[i] != 'X' and row2[i] != 'X'
+    ]
+    if len(common_movies) < no_movies_treshold:
+        return None
     
-def predict(movie_id, similarity_list):
-    i = 0
-    movie_id = int(movie_id)
-    for i in range(len(similarity_list)):
-        if similarity_list[i][movie_id] == 'X':
-            i = i + 1
-        else:
-            return similarity_list[i][movie_id]
+    # Pearson calculation (replace random placeholder)
+    scores_row1, scores_row2 = zip(*common_movies)
+    mean_row1, mean_row2 = sum(scores_row1)/len(scores_row1), sum(scores_row2)/len(scores_row2)
+    numerator = sum((a - mean_row1) * (b - mean_row2) for a, b in common_movies)
+    denominator = (
+        (sum((a - mean_row1) ** 2 for a in scores_row1) ** 0.5) *
+        (sum((b - mean_row2) ** 2 for b in scores_row2) ** 0.5)
+    )
+    similarity = numerator / denominator if denominator != 0 else 0
+    return similarity
 
-    return None
-        
+
+def predict(movie_id, similarity_list):
+    movie_id = int(movie_id)
+    weighted_sum = 0
+    total_similarity = 0
+
+    for similarity, row in similarity_list:
+        rating = row[movie_id]
+        if rating != 'X':  # If the user has reviewed the movie
+            weighted_sum += similarity * float(rating)
+            total_similarity += similarity
+
+    # Return prediction if valid similarities exist
+    return weighted_sum / total_similarity if total_similarity != 0 else None
+
+
+
 def create_similarity_list(student_id, reviews, no_movies_treshold):
     current_student = None
-    current_student_index = -1
     similarity_list = []
-    
-    for i in range(len(reviews)):
-        if reviews[i][0] == student_id:
-            current_student = reviews[i]
-            current_student_index = i
-            i = 999
-            break
-    #ewentualnie tu jeszcze obliczyć wszystkie wartości dla aktualnego studenta do pearsona
-    for i in range(len(reviews)):
-        if not i == current_student_index:
-            distance = calculate_similarity(current_student, reviews[i], no_movies_treshold)
-            if not distance is None:
-                student_copy = reviews[i]
-                student_copy[0] = distance
-                similarity_list.append(student_copy)
 
-    #tu posortuj similarity_list wg [0]
+    for row in reviews:
+        if row[0] == student_id:
+            current_student = row
+            break
+
+    if not current_student:
+        return similarity_list
+
+    for row in reviews:
+        if row[0] != student_id:
+            similarity = calculate_similarity(current_student, row, no_movies_treshold)
+            if similarity is not None:
+                similarity_list.append((similarity, row))
+
+    similarity_list.sort(reverse=True, key=lambda x: x[0])
     return similarity_list
-    
-        
