@@ -1,0 +1,68 @@
+K=10, alpha=0.001, beta=0.001
+Average MSE: 1.6428984316403585
+Testing K=10, alpha=0.001, beta=0.01
+Average MSE: 1.6459808067051227
+Testing K=10, alpha=0.001, beta=0.1
+Average MSE: 1.6400383051959537
+Testing K=10, alpha=0.01, beta=0.001
+Average MSE: 1.6845651413685094
+Testing K=10, alpha=0.01, beta=0.01
+Average MSE: 1.672348770999352
+Testing K=10, alpha=0.01, beta=0.1
+Average MSE: 1.656447512606657
+Testing K=10, alpha=0.1, beta=0.001
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:54: RuntimeWarning: overflow encountered in multiply
+  self.U[i, :] += self.alpha * (e * self.V[j, :] - self.beta * self.U[i, :])
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:55: RuntimeWarning: overflow encountered in multiply
+  self.V[j, :] += self.alpha * (e * self.U[i, :] - self.beta * self.V[j, :])
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:55: RuntimeWarning: invalid value encountered in subtract
+  self.V[j, :] += self.alpha * (e * self.U[i, :] - self.beta * self.V[j, :])
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:54: RuntimeWarning: invalid value encountered in add
+  self.U[i, :] += self.alpha * (e * self.V[j, :] - self.beta * self.U[i, :])
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:50: RuntimeWarning: invalid value encountered in scalar add
+  self.b_u[i] += self.alpha * (e - self.beta * self.b_u[i])
+Average MSE: nan
+Testing K=10, alpha=0.1, beta=0.01
+Average MSE: nan
+Testing K=10, alpha=0.1, beta=0.1
+Average MSE: nan
+Testing K=20, alpha=0.001, beta=0.001
+Average MSE: 1.6427114850396027
+Testing K=20, alpha=0.001, beta=0.01
+Average MSE: 1.6407165953999836
+Testing K=20, alpha=0.001, beta=0.1
+Average MSE: 1.6394027213864788
+Testing K=20, alpha=0.01, beta=0.001
+Average MSE: 1.6536283287026712
+Testing K=20, alpha=0.01, beta=0.01
+Average MSE: 1.6526218514862006
+Testing K=20, alpha=0.01, beta=0.1
+Average MSE: 1.645900202065281
+Testing K=20, alpha=0.1, beta=0.001
+Average MSE: nan
+Testing K=20, alpha=0.1, beta=0.01
+Average MSE: nan
+Testing K=20, alpha=0.1, beta=0.1
+D:\1111\studia\2sem\MachineLearning\Uczenie-maszynowe\collaborative-filtering\filtering.py:58: RuntimeWarning: invalid value encountered in scalar add
+  prediction = self.b + self.b_u[i] + self.b_i[j] + self.U[i, :].dot(self.V[j, :].T)
+Average MSE: nan
+Testing K=30, alpha=0.001, beta=0.001
+Average MSE: 1.6423305985312229
+Testing K=30, alpha=0.001, beta=0.01
+Average MSE: 1.6419722324101387
+Testing K=30, alpha=0.001, beta=0.1
+Average MSE: 1.6379385842335843
+Testing K=30, alpha=0.01, beta=0.001
+Average MSE: 1.6440545068184924
+Testing K=30, alpha=0.01, beta=0.01
+Average MSE: 1.6490355900751752
+Testing K=30, alpha=0.01, beta=0.1
+Average MSE: 1.64212052707955
+Testing K=30, alpha=0.1, beta=0.001
+Average MSE: nan
+Testing K=30, alpha=0.1, beta=0.01
+Average MSE: nan
+Testing K=30, alpha=0.1, beta=0.1
+Average MSE: nan
+Best Parameters: {'K': 30, 'alpha': 0.001, 'beta': 0.1}
+Best MSE: 1.6379385842335843
